@@ -1,15 +1,22 @@
 import Ajax from './Ajax.js'
-
+const data = { d:0, start:0, end:5 }
 const uri = 'https://api.sheety.co/30b6e400-9023-4a15-8e6c-16aa4e3b1e72'
 const ajax = new Ajax(uri, 'GET')
 ajax.getOpen((x)=> {
-  console.log(x.length /)
-  x.forEach( (item, i) => {
-    let p = parseFloat(item.price).toFixed(2)
-    p = monetarioBr(p)
-    add(item.property_type, item.name, item.photo,  p, "#")
-  });
+  data.d = x
+  pagination(data.start, data.end, data.d)
 })
+
+const pagination = (start, end, arr) => {
+  if(end > data.d.length) return false
+  for (start; start <= end;  start++) {
+    let p = parseFloat(arr[start].price).toFixed(2)
+    p = monetarioBr(p)
+    add(arr[start].property_type, arr[start].name, arr[start].photo,  p, "#")
+  }
+  data.start += 1
+  data.end += 5
+}
 
 const creatElemt = (type) => {
   return document.createElement(type)
@@ -52,7 +59,6 @@ const add = (title, text, photo, price, url) =>  {
   addChild(divTitle, span)
   let divInf = creatElemt("div")
   setAttribut(divInf, "class", "inf")
-  // addChild(picture, a)
 
   let newDiv = creatElemt("div")
   setAttribut(newDiv, "class", "card-theme card-in")
@@ -67,9 +73,15 @@ const add = (title, text, photo, price, url) =>  {
   setHtml(a2, `${text}<br /><b>R$: ${price}</b>`);
   addChild(divInf, a2)
   addChild(newDiv, divInf)
-  // addChild(a, newDiv)
-
-  // console.log(newDiv);
   addElemet("body-all", newDiv)
-
 }
+
+document.addEventListener('scroll', () => {
+  let x = document.getElementById('fim')
+  x = x.getBoundingClientRect().top;
+  const bodyHeight = document.body.offsetHeight;
+  // console.log(bodyHeight, x );
+  if (bodyHeight >= x) {
+    pagination(data.start, data.end, data.d)
+  }
+});
