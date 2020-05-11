@@ -3,7 +3,7 @@ import Ajax from './Ajax.js'
 const uri = 'https://api.sheety.co/30b6e400-9023-4a15-8e6c-16aa4e3b1e72'
 const ajax = new Ajax(uri, 'GET')
 ajax.getOpen((x)=> {
-  console.log(x.length)
+  console.log(x.length /)
   x.forEach( (item, i) => {
     let p = parseFloat(item.price).toFixed(2)
     p = monetarioBr(p)
